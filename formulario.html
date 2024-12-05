@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Información Personal</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav>
+        <ul>
+            <a href="index.html">Inicio</a>
+            <a href="formulario.html">Cambiar Datos</a>
+            <a href="mensajes.html">Mensajes</a>
+        </ul>
+    </nav>
+    <h1>Formulario de Información Personal</h1>
+    <form id="personalInfoForm">
+        <label for="name">Nombre:</label>
+        <input type="text" id="name" required><br><br>
+        <label for="last-name">Apellido:</label>
+        <input type="text" id="last_name" required><br><br>
+        <label for="cedula">Cedula:</label>
+        <input type="number" id="cedula" required><br><br>
+
+        <label for="phone">Teléfono:</label>
+        <input type="tel" id="phone" required><br><br>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" required><br><br>
+
+        <label for="hobbies">Hobbies (separados por comas):</label>
+        <input type="text" id="hobbies" required><br><br>
+
+        <label for="task">Tareas (separados por comas):</label>
+        <input type="text" id="task" required><br><br>
+
+        <label for="weeklyActivities">Actividades Semanales (separadas por comas):</label>
+        <input type="text" id="weeklyActivities" required><br><br>
+
+        <label for="job">Trabajo:</label>
+        <input type="text" id="job" required><br><br>
+
+        <label for="profileImage">Imagen de Perfil:</label>
+        <input type="file" id="profileImage" accept="image/*"><br><br>
+
+        <button type="submit">Enviar</button>
+    </form>
+
+    <script>
+        document.getElementById('personalInfoForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('name').value;
+            const last_name = document.getElementById('last_name').value;
+            const cedula = document.getElementById('cedula').value;
+            const phone = document.getElementById('phone').value;
+            const email = document.getElementById('email').value;
+            const hobbies = document.getElementById('hobbies').value.split(',');
+            const task = document.getElementById('task').value.split(',');
+            const weeklyActivities = document.getElementById('weeklyActivities').value.split(',');
+            const job = document.getElementById('job').value;
+            const profileImage = document.getElementById('profileImage').files[0];
+
+            const reader = new FileReader();
+            reader.onloadend = function() {
+                const profileData = {
+                    name,
+                    last_name,
+                    cedula,
+                    phone,
+                    email,
+                    hobbies,
+                    task,
+                    weeklyActivities,
+                    job,
+                    image: reader.result // Store the image as a base64 string
+                };
+
+                localStorage.setItem('profileData', JSON.stringify(profileData));
+                alert('Datos guardados. Ahora puedes ver tu perfil en index.html.');
+                window.location.href = 'index.html';
+            };
+
+            if (profileImage) {
+                reader.readAsDataURL(profileImage);
+            } else {
+                alert('Por favor, selecciona una imagen de perfil.');
+            }
+        });
+    </script>
+</body>
+</html>

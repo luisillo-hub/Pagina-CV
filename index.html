@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página de Perfil</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Removed inline styles as they are now in style.css -->
+</head>
+
+<body>
+    <header>
+        <nav>
+            <ul>
+                <a href="index.html">Inicio</a>
+                <a href="formulario.html">Cambiar Datos</a>
+                <a href="mensajes.html">Mensajes</a>
+            </ul>
+        </nav>
+        <div id="profileName"></div>
+        </div>
+    </header>
+
+    <div id="profile">
+        <img id="profileImage" src="" alt="Imagen de Perfil" style="display:none;">
+
+        <div id="profileInfo"></div>
+    </div>
+    <br>
+    </div>
+    <div style="display: flex;">
+        <div id="lists">
+            <div>
+                <h2>Hobbies</h2>
+                <ul id="hobbiesList"></ul> <!-- Changed from table to unordered list -->
+            </div>
+            <div>
+                <h2>Tareas</h2>
+                <ul id="tasksList"></ul> <!-- Added section for tasks -->
+            </div>
+        </div>
+        <div style="padding-left: 50px;">
+            <h2>Tareas Semanales</h2>
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>Lunes</th>
+                        <th>Martes</th>
+                        <th>Miercoles</th>
+                        <th>Jueves</th>
+                        <th>Viernes</th>
+                        <th>Sabado</th>
+                        <th>Domingo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td id="lunes"></td>
+                        <td id="martes"></td>
+                        <td id="miercoles"></td>
+                        <td id="jueves"></td>
+                        <td id="viernes"></td>
+                        <td id="sabado"></td>
+                        <td id="domingo"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <br>
+   
+<div class="caja">
+        <!-- Contact Form -->
+        <div id="contactForm">
+            <h2>Contáctanos</h2>
+            <form id="formularioContacto" onsubmit="mensajesRecibidos(event)">
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre" required>
+                <br>
+                <label for="motivo">Motivo de Contacto:</label>
+                <input type="text" id="motivo" required>
+                <br>
+                <label for="email">Correo Electrónico:</label>
+                <input type="email" id="email" required>
+                <br>
+                <button type="submit">Enviar</button>
+            </form>
+
+        </div>
+        <div id="imageForm">
+            <img src="contactanos.jpg" >
+        </div>
+    </div>
+    <script>
+        function mensajesRecibidos(event) {
+            event.preventDefault(); // Prevent form submission
+            const nombre = document.getElementById('nombre').value;
+            const motivo = document.getElementById('motivo').value;
+            const email = document.getElementById('email').value;
+
+            // Store the message in local storage
+            let mensajes = JSON.parse(localStorage.getItem('mensajes')) || [];
+            mensajes.push({ nombre, motivo, email });
+            localStorage.setItem('mensajes', JSON.stringify(mensajes));
+
+            // Redirect to mensajes.html
+            window.location.href = 'mensajes.html';
+        }
+        window.onload = function () {
+            const profileData = JSON.parse(localStorage.getItem('profileData'));
+
+            if (profileData) {
+                document.getElementById('profileName').innerHTML = `
+                    <h1><strong>Hola soy</strong> ${profileData.name}!</h1>
+                `;
+                document.getElementById('profileInfo').innerHTML = `
+                <h2>Datos Generales</h2>
+                    <p><strong>Nombre:</strong> ${profileData.name}</p>
+                      <p><strong>Apellido:</strong> ${profileData.last_name}</p>
+                      <p><strong>Cedula:</strong> ${profileData.cedula}</p>
+                    <p><strong>Teléfono:</strong> ${profileData.phone}</p>
+                    <p><strong>Email:</strong> ${profileData.email}</p>
+                    <p><strong>Trabajo:</strong> ${profileData.job}</p>
+                `;
+
+                // Display the profile image
+                const profileImage = document.getElementById('profileImage');
+                profileImage.src = profileData.image;
+                profileImage.style.display = 'block'; // Show the image
+
+                // Populate hobbies list
+                const hobbiesList = document.getElementById('hobbiesList');
+                profileData.hobbies.forEach(hobby => {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = hobby.trim();
+                    hobbiesList.appendChild(listItem);
+                });
+
+                // Populate tasks list
+                const tasksList = document.getElementById('tasksList');
+                profileData.task.forEach(task => {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = task.trim();
+                    tasksList.appendChild(listItem);
+                });
+
+                // Populate weekly activities
+                const weeklyActivities = profileData.weeklyActivities;
+                const daysOfWeek = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo'];
+                daysOfWeek.forEach((day, index) => {
+                    document.getElementById(day).textContent = weeklyActivities[index] ? weeklyActivities[index].trim() : '';
+                });
+            } else {
+                document.getElementById('profileInfo').innerHTML = '<p>No hay datos de perfil disponibles.</p>';
+            }
+        };
+    </script>
+</body>
+
+</html>

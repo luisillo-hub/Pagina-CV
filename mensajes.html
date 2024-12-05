@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mensajes Recibidos</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav>
+        <ul>
+            <a href="index.html">Inicio</a>
+            <a href="formulario.html">Cambiar Datos</a>
+            <a href="mensajes.html">Mensajes</a>
+        </ul>
+    </nav>
+    <br>
+    <h1>Mensajes Recibidos</h1>
+    <div id="profile">
+    
+    <div id="mensajesList"></div>
+    </div>
+    <script>
+        window.onload = function() {
+            const mensajes = JSON.parse(localStorage.getItem('mensajes')) || [];
+            const mensajesList = document.getElementById('mensajesList');
+
+            if (mensajes.length === 0) {
+                mensajesList.innerHTML = '<p>No hay mensajes recibidos.</p>';
+            } else {
+                mensajes.forEach((mensaje, index) => {
+                    const mensajeDiv = document.createElement('div');
+                    mensajeDiv.innerHTML = `<p><strong>Nombre:</strong> ${mensaje.nombre}<br>
+                                            <strong>Motivo:</strong> ${mensaje.motivo}<br>
+                                            <strong>Email:</strong> ${mensaje.email}</p>
+                                            <button onclick="eliminarMensaje(${index})">Eliminar</button>
+                                            <br>`;
+                   
+                                            mensajesList.appendChild(mensajeDiv);
+                });
+            }
+        };
+
+        function eliminarMensaje(index) {
+            const mensajes = JSON.parse(localStorage.getItem('mensajes')) || [];
+            mensajes.splice(index, 1); // Remove the message at the specified index
+            localStorage.setItem('mensajes', JSON.stringify(mensajes)); // Update local storage
+            window.location.reload(); // Reload the page to reflect changes
+        }
+    </script>
+</body>
+</html>
